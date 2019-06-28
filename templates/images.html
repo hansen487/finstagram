@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <title>Finstagram</title>
+    </head>
+    <body>
+        <a href="/">Go back</a>
+        <h1>Image Gallery</h1>
+        <div>
+            {% for image in images %}
+
+            <img src="/image/{{image.filePath}}" width="300"/>
+            <p>Caption: {{image.caption}}</p>
+            <p>Image ID: {{image.photoID}} Photo Owner: {{image.photoOwner}} Timestamp: {{image.timestamp}}</p>
+            <form action="/tagUser" method="post" enctype="multipart/form-data">
+                <input type="text" name="taggedUser{{image.photoID}}" placeholder="Tag friend">
+                <input type="submit" value="Tag User">
+            </form>
+            <div>
+                <p>Liked By:</p>
+                {% for like in likes %}
+                    <ul>
+                        {% if like.photoID == image.photoID %}
+                            <li>{{like.username}} at {{like.timestamp}}</li>
+                        {% endif %}
+                    </ul>
+                {% endfor %}
+                <form action="/like" method="post" enctype="multipart/form=data">
+                    <select name="action">
+                        <option value="like.{{image.photoID}}">Like</option>
+                        <option value="unlike.{{image.photoID}}">Unlike</option>
+                    </select>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+            <p>Tagged Users:
+                <ul>
+                {% for tag in tags %}
+                    {%if tag.photoID == image.photoID %}
+                        <li>{{tag.fname}} {{tag.lname}}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </p>
+            <div>
+            <p>Comments:</p>
+            {% for comment in comments %}
+                {% if comment.photoID == image.photoID %}
+                    <p>{{comment.timestamp}} {{comment.username}}: {{comment.commentText}}</p>
+                {% endif %}
+            {% endfor %}
+            <form action="/comment" method="post" enctype="multipart/form-data">
+                <input type="text" name="{{image.photoID}}" placeholder="Comment">
+                <input type="submit" value="Post Comment">
+            </form>
+            <br/>
+            {% endfor %}
+            </div>
+        </div>
+    </body>
+</html>
